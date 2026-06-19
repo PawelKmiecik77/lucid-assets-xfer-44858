@@ -1,0 +1,290 @@
+/* Project Reel — horizontal slider above DIAG.001 */
+
+.reel {
+  position: relative;
+  max-width: 1640px;
+  margin: 40px auto 28px;
+  padding: 16px var(--gutter) 0;
+  border-top: 1px solid var(--rule);
+}
+
+/* Meta row above stage */
+.reel-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.reel-meta-tag { color: var(--ink); font-weight: 500; }
+.reel-meta-sep { opacity: 0.4; }
+.reel-meta-status { display: inline-flex; align-items: center; gap: 8px; }
+.reel-dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 0 rgba(217, 98, 43, 0.5);
+  animation: reel-pulse 1.6s ease-out infinite;
+}
+.reel-dot[data-paused="true"] { background: var(--ink-3); animation: none; }
+@keyframes reel-pulse {
+  0% { box-shadow: 0 0 0 0 rgba(217, 98, 43, 0.5); }
+  100% { box-shadow: 0 0 0 8px rgba(217, 98, 43, 0); }
+}
+.reel-meta-now { color: var(--ink); }
+
+/* Stage — 16:6 ratio (wider than tall) */
+.reel-stage {
+  position: relative;
+  width: 100vw;
+  left: 50%;
+  transform: translateX(-50%);
+  aspect-ratio: 16 / 6;
+  overflow: hidden;
+  background: #0a0a0a;
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.reel-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.reel-slide[data-active="true"] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.reel-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  /* Ken Burns on active slide — faster, more visible */
+  transform: scale(1.0);
+  transition: transform 4.5s ease-out;
+}
+.reel-slide[data-active="true"] .reel-img {
+  transform: scale(1.12);
+}
+
+/* Placeholder */
+.reel-placeholder { width: 100%; height: 100%; }
+.reel-placeholder-svg { width: 100%; height: 100%; display: block; }
+.reel-placeholder-empty {
+  width: 100%; height: 100%;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  display: flex; align-items: center; justify-content: center; flex-direction: column;
+  gap: 12px;
+  color: rgba(244, 234, 216, 0.6);
+}
+.reel-placeholder-mark {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.1em;
+}
+.reel-placeholder-label {
+  font-family: var(--font-display);
+  font-size: 28px;
+  letter-spacing: -0.01em;
+}
+
+/* Vignette overlay for legibility */
+.reel-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(15, 15, 15, 0.7) 0%, rgba(15, 15, 15, 0) 35%),
+    linear-gradient(to bottom, rgba(15, 15, 15, 0.45) 0%, rgba(15, 15, 15, 0) 25%);
+  pointer-events: none;
+}
+
+/* Credit (top-right) — small monoline, key/value aligned in a 2-col grid */
+.reel-credit {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: rgba(244, 234, 216, 0.92);
+  text-transform: uppercase;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 12px;
+  row-gap: 4px;
+  align-items: baseline;
+  justify-content: end;
+}
+.reel-credit-key {
+  color: rgba(244, 234, 216, 0.5);
+  letter-spacing: 0.1em;
+  text-align: left;
+  font-size: 12px;
+  align-self: baseline;
+}
+.reel-credit-val {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  text-align: right;
+}
+
+/* Caption (bottom-left) — consolidated: number · discipline / project / architect */
+.reel-caption {
+  position: absolute;
+  left: 28px;
+  right: 28px;
+  bottom: 24px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  color: var(--paper);
+}
+.reel-caption-id {
+  font-family: var(--font-mono);
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(244, 234, 216, 0.7);
+  line-height: 1;
+  padding-top: 2px;
+}
+.reel-caption-disc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(244, 234, 216, 0.72);
+  margin-bottom: 9px;
+}
+.reel-tier {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  padding: 2px 8px;
+  border: 1px solid rgba(244, 234, 216, 0.38);
+  color: rgba(244, 234, 216, 0.82);
+}
+.reel-caption-project {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2vw, 28px);
+  font-weight: 500;
+  letter-spacing: -0.012em;
+  line-height: 1.08;
+}
+.reel-caption-arch {
+  font-family: var(--font-text);
+  font-size: 15px;
+  color: rgba(244, 234, 216, 0.72);
+  margin-top: 8px;
+}
+
+/* Track + markers */
+.reel-track {
+  position: relative;
+  margin-top: 18px;
+  padding: 0 0 8px;
+}
+.reel-track-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rule);
+}
+.reel-track-fill {
+  position: absolute;
+  top: -0.5px;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width 0.05s linear;
+}
+
+.reel-markers {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  margin-top: 0;
+}
+.reel-marker {
+  appearance: none;
+  background: none;
+  border: 0;
+  padding: 14px 10px 4px 0;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  font-family: inherit;
+  color: var(--ink-2);
+  transition: color 0.3s;
+}
+.reel-marker-tick {
+  position: absolute;
+  top: -1px;
+  left: 0;
+  width: 1px;
+  height: 10px;
+  background: var(--ink);
+  transform-origin: top;
+}
+.reel-marker[data-active="true"] .reel-marker-tick {
+  height: 14px;
+  width: 2px;
+  background: var(--accent);
+}
+.reel-marker[data-passed="true"] .reel-marker-tick {
+  background: var(--ink);
+}
+.reel-marker-id {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  margin-top: 6px;
+}
+.reel-marker[data-active="true"] .reel-marker-id { color: var(--accent); }
+.reel-marker-label {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--ink-2);
+}
+.reel-marker[data-active="true"] .reel-marker-label { color: var(--ink); }
+.reel-marker:hover .reel-marker-label { color: var(--ink); }
+.reel-marker:hover .reel-marker-id { color: var(--ink-2); }
+
+/* Pillar variant — slightly shorter, full width inside hero */
+.reel--pillar {
+  margin: 48px 0 0;
+}
+.reel-stage--pillar {
+  aspect-ratio: 16 / 5;
+}
+.reel--pillar .reel-caption-disc { display: none; }
+.reel--pillar .reel-caption-arch { font-size: 14px; }
+
+@media (max-width: 760px) {
+  .reel-caption { left: 16px; right: 16px; bottom: 16px; gap: 12px; }
+  .reel-caption-id { font-size: 20px; }
+  .reel-caption-disc { font-size: 12px; margin-bottom: 6px; }
+  .reel-caption-project { font-size: 18px; }
+  .reel-caption-arch { font-size: 13px; }
+  .reel-marker-label { font-size: 13px; }
+  .reel-markers { grid-template-columns: repeat(5, 1fr); }
+}

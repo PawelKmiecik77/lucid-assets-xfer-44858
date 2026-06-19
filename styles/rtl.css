@@ -1,0 +1,25 @@
+/* RTL / Arabic adjustments — scoped to dir="rtl", so harmless for EN/PL. */
+
+html[dir="rtl"] {
+  --font-display: "IBM Plex Sans Arabic", "Red Hat Display", system-ui, sans-serif;
+  --font-text:    "IBM Plex Sans Arabic", "Red Hat Text", system-ui, sans-serif;
+  --font-mono:    "IBM Plex Sans Arabic", ui-monospace, monospace;
+}
+
+/* Arabic script is cursive — Latin letter-spacing disconnects the glyphs.
+   Reset spacing everywhere in RTL so Arabic stays legible. */
+html[dir="rtl"] * { letter-spacing: 0 !important; }
+
+/* Mirror physical-direction bits that don't auto-flip under dir=rtl */
+html[dir="rtl"] .nav-right { margin-left: 0; margin-right: auto; }
+html[dir="rtl"] .hero-meta { align-items: flex-start; }
+html[dir="rtl"] .hero-sup { text-align: right !important; }
+html[dir="rtl"] .reel-credit { right: auto; left: 22px; }
+html[dir="rtl"] .sec-head .num { border-top-color: var(--ink); }
+
+/* Numbered lists / arrows read more naturally flipped */
+html[dir="rtl"] .sector-arrow, html[dir="rtl"] .cs-arrow { transform: scaleX(-1); }
+html[dir="rtl"] .btn .arr { transform: scaleX(-1); }
+
+/* Headlines: keep tight but never negative (crowds Arabic) */
+html[dir="rtl"] .h1, html[dir="rtl"] .h2, html[dir="rtl"] .h3, html[dir="rtl"] .h4 { letter-spacing: 0 !important; }
