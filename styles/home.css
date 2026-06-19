@@ -187,9 +187,9 @@
   border-bottom: 1px solid var(--rule);
   align-items: baseline;
   cursor: pointer;
-  transition: padding .35s var(--ease), background .35s var(--ease);
+  transition: transform .35s var(--ease), background .35s var(--ease);
 }
-.sector-row:hover { padding-left: 18px; }
+.sector-row:hover { transform: translateX(18px); }
 .sector-row:hover .sector-arrow { color: var(--accent); transform: translateX(8px); }
 .sector-row:hover .ttl { color: var(--accent); }
 .sector-row .num { font-family: var(--font-mono); font-size: 14px; color: var(--ink-3); letter-spacing: 0.08em; }
