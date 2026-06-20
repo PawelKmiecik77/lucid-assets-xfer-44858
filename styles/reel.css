@@ -215,13 +215,14 @@
 
 .reel-markers {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   margin-top: 0;
 }
 .reel-marker {
   appearance: none;
   background: none;
   border: 0;
+  outline: none;
   padding: 14px 10px 4px 0;
   text-align: left;
   cursor: pointer;
@@ -232,6 +233,10 @@
   font-family: inherit;
   color: var(--ink-2);
   transition: color 0.3s;
+}
+.reel-marker:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 .reel-marker-tick {
   position: absolute;
@@ -286,5 +291,5 @@
   .reel-caption-project { font-size: 18px; }
   .reel-caption-arch { font-size: 13px; }
   .reel-marker-label { font-size: 13px; }
-  .reel-markers { grid-template-columns: repeat(5, 1fr); }
+  .reel-markers { grid-template-columns: repeat(4, 1fr); }
 }
