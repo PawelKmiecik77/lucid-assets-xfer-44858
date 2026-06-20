@@ -241,6 +241,19 @@
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+
+/* Pillar hero (single static image) — slow Ken Burns zoom on load */
+.pillar-hero [style*="aspect-ratio:16/6"] img {
+  animation: pillar-kenburns 8s ease-out forwards;
+  will-change: transform;
+}
+@keyframes pillar-kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pillar-hero [style*="aspect-ratio:16/6"] img { animation: none; }
+}
 .reel-marker-tick {
   position: absolute;
   top: -1px;
