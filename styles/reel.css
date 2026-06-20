@@ -193,6 +193,9 @@
 /* Track + markers */
 .reel-track {
   position: relative;
+  width: calc(100vw - clamp(40px, 4vw, 80px));
+  left: 50%;
+  transform: translateX(-50%);
   margin-top: 18px;
   padding: 0 0 8px;
 }
