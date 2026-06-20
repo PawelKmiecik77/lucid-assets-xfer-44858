@@ -244,7 +244,7 @@
 
 /* Pillar hero (single static image) — slow Ken Burns zoom on load */
 .pillar-hero [style*="aspect-ratio:16/6"] img {
-  animation: pillar-kenburns 8s ease-out forwards;
+  animation: pillar-kenburns 6.4s ease-out forwards;
   will-change: transform;
 }
 @keyframes pillar-kenburns {
