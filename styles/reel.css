@@ -66,12 +66,20 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  /* Ken Burns on active slide — faster, more visible */
-  transform: scale(1.0);
-  transition: transform 4.5s ease-out;
 }
+/* Ken Burns as a CSS animation (not transition) so it ALSO fires on the first
+   slide at initial load — the first slide renders already-active, and a
+   transition never runs on initial render. Re-runs on every (re)activation. */
 .reel-slide[data-active="true"] .reel-img {
-  transform: scale(1.12);
+  animation: reel-kenburns 4.5s ease-out forwards;
+  will-change: transform;
+}
+@keyframes reel-kenburns {
+  from { transform: scale(1); }
+  to { transform: scale(1.12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reel-slide[data-active="true"] .reel-img { animation: none; }
 }
 
 /* Placeholder */
