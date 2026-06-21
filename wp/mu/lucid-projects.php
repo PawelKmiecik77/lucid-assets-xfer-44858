@@ -108,7 +108,11 @@ function lucid_project_card($id) {
   $locv = (string) get_field('loc', $id);
   $scope = (string) get_field('scope', $id);
   $h  = '<a class="cs-card" href="' . esc_url(get_permalink($id)) . '">';
-  $h .= '<div class="cs-image" style="background-image:url(\'' . esc_url($img0) . '\');background-size:cover;background-position:center"><div class="corner-tl"></div><div class="corner-br"></div></div>';
+  if ($img0) {
+    $h .= '<div class="cs-image" style="background-image:url(\'' . esc_url($img0) . '\');background-size:cover;background-position:center"><div class="corner-tl"></div><div class="corner-br"></div></div>';
+  } else {
+    $h .= '<div class="cs-image"><div class="corner-tl"></div><div class="corner-br"></div><div class="placeholder">[ Project visualisation ]</div></div>';
+  }
   $h .= '<div class="cs-body"><div class="cs-meta"><span>' . esc_html($disc) . '</span></div>';
   $h .= '<h3 class="cs-title">' . esc_html(get_the_title($id)) . '</h3>';
   $h .= '<p class="cs-loc">' . esc_html($locv) . ' · ' . esc_html($scope) . '</p>';
