@@ -158,6 +158,47 @@ function lucid_swfilm_html($page_id) {
   return $h;
 }
 
+/* ============ STUDIO — team grid ============ */
+add_action('acf/init', function () {
+  if (!function_exists('acf_add_local_field_group')) return;
+  acf_add_local_field_group(array(
+    'key' => 'group_lucid_team',
+    'title' => 'Zespół (Founding Partners)',
+    'fields' => array(
+      array('key'=>'field_team','label'=>'Zespół','name'=>'team','type'=>'repeater','layout'=>'block','button_label'=>'Dodaj osobę','sub_fields'=>array(
+        array('key'=>'field_t_photo','label'=>'Zdjęcie','name'=>'photo','type'=>'image','return_format'=>'id','preview_size'=>'thumbnail','wrapper'=>array('width'=>'20')),
+        array('key'=>'field_t_initials','label'=>'Inicjały','name'=>'initials','type'=>'text','wrapper'=>array('width'=>'15')),
+        array('key'=>'field_t_name','label'=>'Imię i nazwisko','name'=>'name','type'=>'text','wrapper'=>array('width'=>'25')),
+        array('key'=>'field_t_role','label'=>'Rola','name'=>'role','type'=>'text','wrapper'=>array('width'=>'20')),
+        array('key'=>'field_t_focus','label'=>'Specjalizacja','name'=>'focus','type'=>'text','wrapper'=>array('width'=>'20')),
+      )),
+    ),
+    'location' => array(
+      array(array('param'=>'post','operator'=>'==','value'=>'14')),
+      array(array('param'=>'post','operator'=>'==','value'=>'63')),
+    ),
+  ));
+});
+
+function lucid_team_html($page_id) {
+  $n = (int) get_post_meta($page_id, 'team', true);
+  if ($n < 1) return '';
+  $h = '<div class="team-grid team-grid-4">';
+  for ($i = 0; $i < $n; $i++) {
+    $k = 'team_' . $i . '_';
+    $photo = get_post_meta($page_id, $k . 'photo', true);
+    if ($photo && is_numeric($photo)) $photo = wp_get_attachment_image_url((int) $photo, 'medium');
+    $initials = (string) get_post_meta($page_id, $k . 'initials', true);
+    $name = (string) get_post_meta($page_id, $k . 'name', true);
+    $role = (string) get_post_meta($page_id, $k . 'role', true);
+    $focus = (string) get_post_meta($page_id, $k . 'focus', true);
+    $h .= '<div class="team-card"><div class="team-photo" style="position:relative"><span>' . esc_html($initials) . '</span>';
+    if ($photo) $h .= '<img src="' . esc_url($photo) . '" alt="' . esc_attr($name) . '" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover" onerror="this.remove()">';
+    $h .= '</div><div class="team-role">' . esc_html($role) . '</div><h3 class="team-name">' . esc_html($name) . '</h3><div class="team-focus">' . esc_html($focus) . '</div></div>';
+  }
+  return $h . '</div>';
+}
+
 /* ============ placeholder render ============ */
 add_filter('render_block', function ($content, $block) {
   if (strpos($content, 'LUCID_INTEG') !== false) {
@@ -168,6 +209,9 @@ add_filter('render_block', function ($content, $block) {
   }
   if (strpos($content, 'LUCID_SWFILM') !== false) {
     $content = str_replace('LUCID_SWFILM', lucid_swfilm_html(get_queried_object_id()), $content);
+  }
+  if (strpos($content, 'LUCID_TEAM') !== false) {
+    $content = str_replace('LUCID_TEAM', lucid_team_html(get_queried_object_id()), $content);
   }
   return $content;
 }, 10, 2);
