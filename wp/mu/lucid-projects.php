@@ -172,15 +172,19 @@ function lucid_project_detail($id) {
   $h .= '<div class="pillar-hero-meta"><span>· ' . esc_html($locv) . '</span><span>· ' . esc_html($scope) . '</span></div>';
   $h .= '</div></section>';
 
+  // gallery — real gallery when images exist, else a placeholder so the slot is visible
+  $h .= '<section><div class="shell-wide"><div class="sec-head"><div class="num">' . esc_html($ui['gallery']) . '</div><div><h2 class="h2">' . esc_html($ui['galleryTitle']) . '</h2></div><p style="max-width:520px;margin:0">' . esc_html($ui['galleryIntro']) . '</p></div>';
   if ($n > 0) {
-    $h .= '<section><div class="shell-wide"><div class="sec-head"><div class="num">' . esc_html($ui['gallery']) . '</div><div><h2 class="h2">' . esc_html($ui['galleryTitle']) . '</h2></div><p style="max-width:520px;margin:0">' . esc_html($ui['galleryIntro']) . '</p></div>';
     $h .= '<div class="proj-gallery"><button class="pg-lead" data-lb="0" style="background-image:url(\'' . esc_url($imgs[0]) . '\')" aria-label="View image 1"><span class="pg-zoom">⤢ ' . esc_html($ui['view']) . '</span><span class="pg-index">01 / ' . $pad($n) . '</span></button>';
     $h .= '<div class="pg-thumbs">';
     for ($i = 1; $i < $n; $i++) {
       $h .= '<button class="pg-thumb" data-lb="' . $i . '" style="background-image:url(\'' . esc_url($imgs[$i]) . '\')" aria-label="View image ' . ($i + 1) . '"><span class="pg-zoom">⤢</span></button>';
     }
-    $h .= '</div></div></div></section>';
+    $h .= '</div></div>';
+  } else {
+    $h .= '<div class="proj-gallery"><div class="pg-lead" style="cursor:default;display:flex;align-items:center;justify-content:center;min-height:320px;background:repeating-linear-gradient(135deg,#f0f0f0,#f0f0f0 12px,#f7f7f7 12px,#f7f7f7 24px)"><div class="corner-tl"></div><div class="corner-br"></div><span style="font-family:var(--font-mono);font-size:13px;letter-spacing:0.18em;color:var(--ink-3);text-transform:uppercase">[ Project visualisation ]</span></div></div>';
   }
+  $h .= '</div></section>';
 
   if ($facts) {
     $h .= '<section style="background:var(--paper-2);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)"><div class="shell-wide"><div class="sec-head"><div class="num">' . esc_html($ui['facts']) . '</div><div><h2 class="h2">' . esc_html($ui['factsTitle']) . '</h2></div><p style="max-width:520px;margin:0">' . esc_html($disc) . '</p></div>';
