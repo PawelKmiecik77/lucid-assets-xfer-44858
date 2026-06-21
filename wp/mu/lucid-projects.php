@@ -49,7 +49,9 @@ add_action('acf/init', function () {
 
 /* ---------- 3. Helpers ---------- */
 function lucid_proj_locale($id) {
-  if (function_exists('pll_get_post_language')) { $l = pll_get_post_language($id, 'slug'); if ($l) return $l; }
+  // Render labels by the VIEWING page language (projects are a single EN-data set
+  // surfaced on both the EN and PL index; detail pages render under /projects/ = EN).
+  if (function_exists('pll_current_language')) { $l = pll_current_language('slug'); if ($l) return $l; }
   return 'en';
 }
 function lucid_proj_tagline($disc) { return $disc === 'Signage & Wayfinding' ? 'Architects of the Way' : 'Architects of Light'; }
@@ -98,7 +100,7 @@ function lucid_project_card($id) {
 
 /* ---------- 5. Index grid ---------- */
 function lucid_projects_index_html() {
-  $q = new WP_Query(array('post_type'=>'project','posts_per_page'=>-1,'orderby'=>array('menu_order'=>'ASC','date'=>'ASC'),'post_status'=>'publish'));
+  $q = new WP_Query(array('post_type'=>'project','posts_per_page'=>-1,'orderby'=>array('menu_order'=>'ASC','date'=>'ASC'),'post_status'=>'publish','lang'=>''));
   $h = '<div class="cs-grid">';
   while ($q->have_posts()) { $q->the_post(); $h .= lucid_project_card(get_the_ID()); }
   wp_reset_postdata();
