@@ -104,6 +104,60 @@ function lucid_partners_html($page_id) {
   return $h;
 }
 
+/* ============ WAYDRAFTER — software window / film slot ============ */
+add_action('acf/init', function () {
+  if (!function_exists('acf_add_local_field_group')) return;
+  acf_add_local_field_group(array(
+    'key' => 'group_lucid_swfilm',
+    'title' => 'WayDrafter — okno / film',
+    'fields' => array(
+      array('key'=>'field_sw_image','label'=>'Obraz w oknie','name'=>'sw_image','type'=>'image','return_format'=>'id','preview_size'=>'medium','wrapper'=>array('width'=>'50'),'instructions'=>'Puste = placeholder z przyciskiem play.'),
+      array('key'=>'field_sw_video','label'=>'Wideo (URL YouTube/Vimeo/MP4)','name'=>'sw_video','type'=>'url','wrapper'=>array('width'=>'50'),'instructions'=>'Jeśli podane, zastępuje obraz.'),
+      array('key'=>'field_sw_title','label'=>'Tytuł okna','name'=>'sw_title','type'=>'text','wrapper'=>array('width'=>'50')),
+      array('key'=>'field_sw_status','label'=>'Status (np. PREVIEW)','name'=>'sw_status','type'=>'text','wrapper'=>array('width'=>'50')),
+      array('key'=>'field_sw_phlabel','label'=>'Placeholder — etykieta','name'=>'sw_ph_label','type'=>'text','wrapper'=>array('width'=>'50')),
+      array('key'=>'field_sw_phdim','label'=>'Placeholder — podtytuł','name'=>'sw_ph_dim','type'=>'text','wrapper'=>array('width'=>'50')),
+      array('key'=>'field_sw_caption','label'=>'Podpis pod oknem','name'=>'sw_caption','type'=>'text'),
+      array('key'=>'field_sw_ctatext','label'=>'CTA — tekst','name'=>'sw_cta_text','type'=>'text','wrapper'=>array('width'=>'50')),
+      array('key'=>'field_sw_ctaurl','label'=>'CTA — URL','name'=>'sw_cta_url','type'=>'text','wrapper'=>array('width'=>'50')),
+    ),
+    'location' => array(
+      array(array('param'=>'post','operator'=>'==','value'=>'13')),
+      array(array('param'=>'post','operator'=>'==','value'=>'61')),
+    ),
+  ));
+});
+
+function lucid_swfilm_html($page_id) {
+  $img = get_post_meta($page_id, 'sw_image', true);
+  if ($img && is_numeric($img)) $img = wp_get_attachment_image_url((int) $img, 'large');
+  $video = trim((string) get_post_meta($page_id, 'sw_video', true));
+  $title = (string) get_post_meta($page_id, 'sw_title', true);
+  $status = (string) get_post_meta($page_id, 'sw_status', true);
+  $phl = (string) get_post_meta($page_id, 'sw_ph_label', true);
+  $phd = (string) get_post_meta($page_id, 'sw_ph_dim', true);
+  $cap = (string) get_post_meta($page_id, 'sw_caption', true);
+  $ctat = (string) get_post_meta($page_id, 'sw_cta_text', true);
+  $ctau = (string) get_post_meta($page_id, 'sw_cta_url', true);
+  $h = '<div class="sw-window">';
+  $h .= '<div class="sw-bar"><span class="sw-dots"><i></i><i></i><i></i></span><span class="sw-title">' . esc_html($title) . '</span><span class="sw-status">' . esc_html($status) . '</span></div>';
+  $h .= '<div class="sw-screen">';
+  if ($video) {
+    $embed = function_exists('wp_oembed_get') ? wp_oembed_get($video) : false;
+    if ($embed) $h .= '<div class="sw-embed" style="width:100%;height:100%">' . $embed . '</div>';
+    else $h .= '<video class="sw-video" src="' . esc_url($video) . '" controls playsinline style="width:100%;height:100%;object-fit:cover"></video>';
+  } elseif ($img) {
+    $h .= '<div class="sw-poster" style="background-image:url(\'' . esc_url($img) . '\');background-size:cover;background-position:center;width:100%;height:100%"></div>';
+  } else {
+    $h .= '<div class="sw-placeholder"><div class="sw-corner tl"></div><div class="sw-corner tr"></div><div class="sw-corner bl"></div><div class="sw-corner br"></div><div class="sw-play"><span></span></div><div class="sw-ph-label">' . esc_html($phl) . '</div><div class="sw-ph-dim">' . esc_html($phd) . '</div></div>';
+  }
+  $h .= '</div>';
+  $h .= '<div class="sw-caption">' . esc_html($cap) . '</div>';
+  $h .= '</div>';
+  if ($ctat) $h .= '<a class="software-cta" href="' . esc_url($ctau) . '">' . esc_html($ctat) . '<span class="arr"></span></a>';
+  return $h;
+}
+
 /* ============ placeholder render ============ */
 add_filter('render_block', function ($content, $block) {
   if (strpos($content, 'LUCID_INTEG') !== false) {
@@ -111,6 +165,9 @@ add_filter('render_block', function ($content, $block) {
   }
   if (strpos($content, 'LUCID_PARTNERS') !== false) {
     $content = str_replace('LUCID_PARTNERS', lucid_partners_html(get_queried_object_id()), $content);
+  }
+  if (strpos($content, 'LUCID_SWFILM') !== false) {
+    $content = str_replace('LUCID_SWFILM', lucid_swfilm_html(get_queried_object_id()), $content);
   }
   return $content;
 }, 10, 2);
