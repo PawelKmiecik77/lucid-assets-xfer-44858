@@ -124,6 +124,10 @@ add_action('acf/init', function () {
     'location' => array(
       array(array('param'=>'post','operator'=>'==','value'=>'13')),
       array(array('param'=>'post','operator'=>'==','value'=>'61')),
+      array(array('param'=>'post','operator'=>'==','value'=>'19')),
+      array(array('param'=>'post','operator'=>'==','value'=>'71')),
+      array(array('param'=>'post','operator'=>'==','value'=>'20')),
+      array(array('param'=>'post','operator'=>'==','value'=>'73')),
     ),
   ));
 });
