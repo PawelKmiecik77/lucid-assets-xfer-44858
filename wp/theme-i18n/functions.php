@@ -23,9 +23,27 @@ function lucid_inc($base) {
   if (!is_readable($f)) $f = $d . $base . '.html';
   return is_readable($f) ? file_get_contents($f) : '';
 }
+// Dynamic, per-page language switcher (Polylang). Built to match the static
+// .lang-switch markup from the Astro header, so it drops straight in.
+function lucid_langswitch() {
+  if (!function_exists('pll_the_languages')) return '';
+  $ls = pll_the_languages(array('raw' => 1, 'hide_if_no_translation' => 0));
+  if (!is_array($ls) || !$ls) return '';
+  $o = '<div class="lang-switch" role="group" aria-label="Language">';
+  foreach ($ls as $l) {
+    $a = !empty($l['current_lang']) ? ' class="active"' : '';
+    $o .= '<a' . $a . ' href="' . esc_url($l['url']) . '" hreflang="' . esc_attr($l['slug']) . '">' . strtoupper($l['slug']) . '</a>';
+  }
+  return $o . '</div>';
+}
 add_action('wp_body_open', function () {
   if (is_admin()) return;
-  echo lucid_inc('header');
+  $h = lucid_inc('header');
+  // swap the static switcher for the live, per-page one
+  $h = preg_replace_callback('#<div class="lang-switch".*?</div>#s', function () {
+    return lucid_langswitch();
+  }, $h);
+  echo $h;
 });
 add_action('wp_footer', function () {
   if (is_admin()) return;
