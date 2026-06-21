@@ -27,14 +27,17 @@ add_action('acf/init', function () {
 });
 
 function lucid_integ_html($page_id) {
-  $rows = function_exists('get_field') ? get_field('integ_items', $page_id) : null;
-  if (!is_array($rows) || !$rows) return '';
+  // Read the ACF repeater rows from raw meta (robust against local sub-field
+  // name-lookup quirks); the ACF admin UI still edits these fields normally.
+  $n = (int) get_post_meta($page_id, 'integ_items', true);
+  if ($n < 1) return '';
   $h = '<div class="integ-figs">';
-  foreach ($rows as $r) {
-    $img = !empty($r['image']) ? $r['image'] : '';
-    $label = isset($r['label']) ? $r['label'] : '';
-    $title = isset($r['title']) ? $r['title'] : '';
-    $desc = isset($r['description']) ? $r['description'] : '';
+  for ($idx = 0; $idx < $n; $idx++) {
+    $img = get_post_meta($page_id, 'integ_items_' . $idx . '_image', true);
+    if ($img && is_numeric($img)) $img = wp_get_attachment_image_url((int) $img, 'large');
+    $label = (string) get_post_meta($page_id, 'integ_items_' . $idx . '_label', true);
+    $title = (string) get_post_meta($page_id, 'integ_items_' . $idx . '_title', true);
+    $desc = (string) get_post_meta($page_id, 'integ_items_' . $idx . '_description', true);
     $h .= '<figure class="integ-fig">';
     if ($img) {
       $h .= '<div class="integ-frame" style="background-image:url(\'' . esc_url($img) . '\');background-size:cover;background-position:center"><span class="corner-tl"></span><span class="corner-br"></span></div>';
