@@ -239,3 +239,30 @@ add_filter('render_block', function ($content, $block) {
   }
   return $content;
 }, 10, 2);
+
+/* ============ layout CSS (non-scoped) — restores Astro scoped styles lost in the editable renders ============ */
+add_action('wp_enqueue_scripts', function () {
+  $css = <<<'LCSS'
+.partner-band{padding:clamp(44px,6vw,84px) 0}
+.partner-grid{display:grid;grid-template-columns:1fr 240px;gap:clamp(28px,4vw,56px);align-items:center}
+.partner-region{font-family:var(--font-mono);font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--ink-3);margin-bottom:16px}
+.partner-name{font-family:var(--font-display);font-size:clamp(28px,3vw,44px);font-weight:500;letter-spacing:-0.015em;line-height:1.1;margin:0}
+.partner-scope{font-family:var(--font-mono);font-size:13px;letter-spacing:0.06em;text-transform:uppercase;color:var(--accent);margin:14px 0 22px}
+.partner-bio{font-size:15px;line-height:1.7;color:var(--ink-2);max-width:54ch;margin:0 0 26px}
+.partner-link{color:var(--ink);font-family:var(--font-mono);font-size:13px;letter-spacing:0.08em;text-transform:uppercase;display:inline-flex;align-items:center;gap:8px;border-bottom:1px solid var(--ink);padding-bottom:4px}
+.partner-portrait{position:relative;width:240px;max-width:100%}
+.partner-portrait img{width:100%;aspect-ratio:4/5;object-fit:cover;object-position:center top;display:block;border:1px solid var(--rule)}
+.partner-portrait .corner-tl,.partner-portrait .corner-br{position:absolute;width:13px;height:13px;border-top:1px solid var(--ink);border-left:1px solid var(--ink);top:-6px;left:-6px;z-index:2}
+.partner-portrait .corner-br{top:auto;left:auto;bottom:-6px;right:-6px;border-top:0;border-left:0;border-bottom:1px solid var(--ink);border-right:1px solid var(--ink)}
+.integ-figs{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,2.4vw,36px);margin-top:4px}
+.integ-frame{position:relative;aspect-ratio:4/3;border:1px solid var(--rule);background:var(--paper-2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;overflow:hidden;background-image:linear-gradient(var(--rule) 1px,transparent 1px),linear-gradient(90deg,var(--rule) 1px,transparent 1px);background-size:32px 32px;background-position:center}
+.integ-frame .integ-label{font-family:var(--font-mono);font-size:12px;letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);z-index:1}
+.integ-frame .integ-soon{font-family:var(--font-mono);font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--accent);z-index:1}
+.integ-frame .corner-tl,.integ-frame .corner-br{position:absolute;width:13px;height:13px;border-top:1px solid var(--ink);border-left:1px solid var(--ink);top:8px;left:8px;z-index:2}
+.integ-frame .corner-br{top:auto;left:auto;bottom:8px;right:8px;border-top:0;border-left:0;border-bottom:1px solid var(--ink);border-right:1px solid var(--ink)}
+.integ-fig figcaption{font-size:14px;line-height:1.6;color:var(--ink-2);margin-top:14px}
+.integ-fig figcaption b{color:var(--ink);font-weight:600;display:block;margin-bottom:4px}
+@media(max-width:860px){.integ-figs{grid-template-columns:1fr}.partner-grid{grid-template-columns:1fr;gap:28px}}
+LCSS;
+  wp_add_inline_style('lucid-astro-base', $css);
+}, 25);
