@@ -1,0 +1,41 @@
+<?php
+add_action('wp_enqueue_scripts', function () {
+  wp_enqueue_style('lucid-fonts', 'https://fonts.googleapis.com/css2?family=Red+Hat+Display:wght@400;500;600;700&family=Red+Hat+Text:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap', array(), null);
+  $b = get_stylesheet_directory_uri() . '/astro';
+  wp_enqueue_style('lucid-astro-base', $b . '/styles.css', array(), '2.3');
+  wp_enqueue_style('lucid-astro-home', $b . '/home.css', array('lucid-astro-base'), '2.3');
+  wp_enqueue_style('lucid-astro-reel', $b . '/reel.css', array('lucid-astro-base'), '2.3');
+  wp_enqueue_style('lucid-astro-pillar', $b . '/pillar.css', array('lucid-astro-base'), '2.3');
+  wp_enqueue_style('lucid-astro-insights', $b . '/insights.css', array('lucid-astro-base'), '2.3');
+  wp_enqueue_style('lucid-astro-scoped', $b . '/scoped.css', array('lucid-astro-base'), '2.3');
+  wp_enqueue_script('lucid-js', get_stylesheet_directory_uri() . '/js/lucid.js', array(), '2.3', array('in_footer' => true, 'strategy' => 'defer'));
+}, 20);
+
+// --- i18n: locale-aware shared chrome + homepage (Polylang) ---
+function lucid_locale() {
+  $l = function_exists('pll_current_language') ? pll_current_language() : '';
+  return $l ? $l : 'en';
+}
+function lucid_inc($base) {
+  $d = get_stylesheet_directory() . '/inc/';
+  $loc = lucid_locale();
+  $f = $d . $base . '-' . $loc . '.html';
+  if (!is_readable($f)) $f = $d . $base . '.html';
+  return is_readable($f) ? file_get_contents($f) : '';
+}
+add_action('wp_body_open', function () {
+  if (is_admin()) return;
+  echo lucid_inc('header');
+});
+add_action('wp_footer', function () {
+  if (is_admin()) return;
+  echo lucid_inc('footer');
+}, 5);
+// Front page renders a placeholder inside a wp:html block; swap it for the
+// locale-appropriate home markup at render time (raw, no wpautop).
+add_filter('render_block', function ($content, $block) {
+  if (strpos($content, 'LUCID_HOME_PLACEHOLDER') !== false) {
+    return str_replace('LUCID_HOME_PLACEHOLDER', lucid_inc('home'), $content);
+  }
+  return $content;
+}, 10, 2);
