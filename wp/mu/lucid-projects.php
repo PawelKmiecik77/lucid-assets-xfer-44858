@@ -182,7 +182,12 @@ function lucid_project_detail($id) {
     }
     $h .= '</div></div>';
   } else {
-    $h .= '<div class="proj-gallery"><div class="pg-lead" style="cursor:default;display:flex;align-items:center;justify-content:center;min-height:320px;background:repeating-linear-gradient(135deg,#f0f0f0,#f0f0f0 12px,#f7f7f7 12px,#f7f7f7 24px)"><div class="corner-tl"></div><div class="corner-br"></div><span style="font-family:var(--font-mono);font-size:13px;letter-spacing:0.18em;color:var(--ink-3);text-transform:uppercase">[ Project visualisation ]</span></div></div>';
+    $h .= '<div class="proj-gallery"><div class="pg-lead" style="cursor:default;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(135deg,#f0f0f0,#f0f0f0 12px,#f7f7f7 12px,#f7f7f7 24px)"><div class="corner-tl"></div><div class="corner-br"></div><span style="font-family:var(--font-mono);font-size:13px;letter-spacing:0.18em;color:var(--ink-3);text-transform:uppercase">[ Project visualisation ]</span></div>';
+    $h .= '<div class="pg-thumbs">';
+    for ($t = 0; $t < 3; $t++) {
+      $h .= '<div class="pg-thumb" style="cursor:default;background:repeating-linear-gradient(135deg,#f0f0f0,#f0f0f0 10px,#f7f7f7 10px,#f7f7f7 20px)"></div>';
+    }
+    $h .= '</div></div>';
   }
   $h .= '</div></section>';
 
