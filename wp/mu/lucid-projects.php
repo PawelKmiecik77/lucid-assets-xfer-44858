@@ -45,6 +45,24 @@ add_action('acf/init', function () {
     'location' => array(array(array('param'=>'post_type','operator'=>'==','value'=>'project'))),
     'position' => 'normal',
   ));
+  // "Related projects" picker — shown on discipline pages (EN + PL).
+  acf_add_local_field_group(array(
+    'key' => 'group_lucid_related',
+    'title' => 'Powiązane projekty (siatka „Related projects")',
+    'fields' => array(
+      array('key'=>'field_lr_projects','label'=>'Powiązane projekty','name'=>'related_projects','type'=>'relationship','post_type'=>array('project'),'filters'=>array('search'),'return_format'=>'id','instructions'=>'Projekty pokazywane w siatce „Related projects" na tej stronie. Kafelki ciągną zdjęcia z wpisów projektów.'),
+    ),
+    'location' => array(
+      array(array('param'=>'post','operator'=>'==','value'=>'18')),
+      array(array('param'=>'post','operator'=>'==','value'=>'19')),
+      array(array('param'=>'post','operator'=>'==','value'=>'20')),
+      array(array('param'=>'post','operator'=>'==','value'=>'21')),
+      array(array('param'=>'post','operator'=>'==','value'=>'69')),
+      array(array('param'=>'post','operator'=>'==','value'=>'71')),
+      array(array('param'=>'post','operator'=>'==','value'=>'73')),
+      array(array('param'=>'post','operator'=>'==','value'=>'75')),
+    ),
+  ));
 });
 
 /* ---------- 3. Helpers ---------- */
@@ -104,6 +122,14 @@ function lucid_projects_index_html() {
   $h = '<div class="cs-grid">';
   while ($q->have_posts()) { $q->the_post(); $h .= lucid_project_card(get_the_ID()); }
   wp_reset_postdata();
+  return $h . '</div>';
+}
+// Curated "Related projects" grid for a discipline page (from its ACF picker).
+function lucid_related_projects_html($page_id) {
+  $ids = get_field('related_projects', $page_id);
+  if (!is_array($ids) || !$ids) return '';
+  $h = '<div class="cs-grid">';
+  foreach ($ids as $pid) { if (get_post_status($pid) === 'publish') $h .= lucid_project_card($pid); }
   return $h . '</div>';
 }
 
@@ -183,6 +209,9 @@ add_filter('render_block', function ($content, $block) {
   }
   if (strpos($content, 'LUCID_PROJECT_DETAIL') !== false) {
     $content = str_replace('LUCID_PROJECT_DETAIL', lucid_project_detail(get_queried_object_id()), $content);
+  }
+  if (strpos($content, 'LUCID_RELATED') !== false) {
+    $content = str_replace('LUCID_RELATED', lucid_related_projects_html(get_queried_object_id()), $content);
   }
   return $content;
 }, 10, 2);
