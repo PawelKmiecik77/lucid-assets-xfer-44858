@@ -43,6 +43,12 @@ add_action('wp_body_open', function () {
   $h = preg_replace_callback('#<div class="lang-switch".*?</div>#s', function () {
     return lucid_langswitch();
   }, $h);
+  // swap the static logo for the WP Custom Logo (Customizer → Site Identity) when set
+  $logo_id = get_theme_mod('custom_logo');
+  if ($logo_id) {
+    $logo_url = wp_get_attachment_image_url($logo_id, 'full');
+    if ($logo_url) $h = preg_replace('#src="/assets/logo-lucid[^"]*"#', 'src="' . esc_url($logo_url) . '"', $h);
+  }
   echo $h;
 });
 add_action('wp_footer', function () {
